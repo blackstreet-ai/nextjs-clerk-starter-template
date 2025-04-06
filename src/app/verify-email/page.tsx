@@ -5,11 +5,15 @@ import { useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function VerifyEmailPage() {
   const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [verificationSent, setVerificationSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState("");
   const { isLoaded, signUp } = useSignUp();
 
@@ -39,6 +43,32 @@ export default function VerifyEmailPage() {
     }
   };
 
+  const handleVerifyCode = async () => {
+    if (!isLoaded || !verificationCode) return;
+
+    setVerifying(true);
+    setError("");
+
+    try {
+      const result = await signUp.attemptEmailAddressVerification({
+        code: verificationCode,
+      });
+
+      if (result.status === "complete") {
+        // User is logged in and verification is complete
+        window.location.href = "/dashboard";
+      } else {
+        // Verification may not be complete yet
+        setError("Verification is incomplete. Please try again.");
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Verification failed. Please check your code and try again.";
+      setError(errorMessage);
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -56,30 +86,48 @@ export default function VerifyEmailPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-xl">Check your email</CardTitle>
             <CardDescription>
-              We&apos;ve sent a verification link to{" "}
+              We&apos;ve sent a verification code to{" "}
               <span className="font-medium">{email}</span>
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6">
-              <div className="text-center text-sm">
-                <p className="mb-4">
-                  Click the link in the email to verify your account and complete the sign-up process.
+              <div className="grid gap-4">
+                <p className="text-sm text-center">
+                  Enter the verification code from your email to complete the sign-up process.
                 </p>
-                {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+                {error && <p className="text-sm text-red-500 text-center">{error}</p>}
                 {verificationSent && (
-                  <p className="text-sm text-green-500 mb-4">
-                    Verification email resent successfully!
+                  <p className="text-sm text-green-500 text-center">
+                    Verification code resent successfully!
                   </p>
                 )}
+                <div className="grid gap-2">
+                  <Label htmlFor="verification-code">Verification Code</Label>
+                  <Input
+                    id="verification-code"
+                    placeholder="Enter code"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value)}
+                  />
+                </div>
                 <Button
-                  variant="outline"
                   className="w-full"
-                  onClick={handleResendVerification}
-                  disabled={isLoading}
+                  onClick={handleVerifyCode}
+                  disabled={verifying || !verificationCode}
                 >
-                  {isLoading ? "Sending..." : "Resend verification email"}
+                  {verifying ? "Verifying..." : "Verify Email"}
                 </Button>
+                <div className="text-center">
+                  <Button
+                    variant="link"
+                    className="text-sm"
+                    onClick={handleResendVerification}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Sending..." : "Resend verification code"}
+                  </Button>
+                </div>
               </div>
               <div className="text-center text-sm">
                 <Link href="/login" className="underline underline-offset-4">
