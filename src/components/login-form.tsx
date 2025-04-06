@@ -50,7 +50,7 @@ export function LoginForm({
 
               if (result.status === "complete") {
                 await setActive({ session: result.createdSessionId });
-                window.location.href = "/";
+                window.location.href = "/dashboard";
               }
             } catch (err: unknown) {
               const errorMessage = err instanceof Error ? err.message : "Something went wrong";
@@ -70,7 +70,7 @@ export function LoginForm({
                       await signIn.authenticateWithRedirect({
                         strategy: "oauth_github",
                         redirectUrl: "/sso-callback",
-                        redirectUrlComplete: "/"
+                        redirectUrlComplete: "/dashboard"
                       });
                     } catch (err) {
                       console.error(err);
@@ -94,7 +94,7 @@ export function LoginForm({
                       await signIn.authenticateWithRedirect({
                         strategy: "oauth_google",
                         redirectUrl: "/sso-callback",
-                        redirectUrlComplete: "/"
+                        redirectUrlComplete: "/dashboard"
                       });
                     } catch (err) {
                       console.error(err);

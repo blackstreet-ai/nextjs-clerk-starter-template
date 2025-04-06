@@ -47,12 +47,11 @@ export function SignUpForm({
               const result = await signUp.create({
                 emailAddress: email,
                 password,
-                firstName,
               });
 
               if (result.status === "complete") {
                 await setActive({ session: result.createdSessionId });
-                window.location.href = "/";
+                window.location.href = "/dashboard";
               } else {
                 // Email verification required
                 window.location.href = `/verify-email?email=${encodeURIComponent(email)}`;
@@ -75,7 +74,7 @@ export function SignUpForm({
                       await signUp.authenticateWithRedirect({
                         strategy: "oauth_github",
                         redirectUrl: "/sso-callback",
-                        redirectUrlComplete: "/"
+                        redirectUrlComplete: "/dashboard"
                       });
                     } catch (err) {
                       console.error(err);
@@ -99,7 +98,7 @@ export function SignUpForm({
                       await signUp.authenticateWithRedirect({
                         strategy: "oauth_google",
                         redirectUrl: "/sso-callback",
-                        redirectUrlComplete: "/"
+                        redirectUrlComplete: "/dashboard"
                       });
                     } catch (err) {
                       console.error(err);
