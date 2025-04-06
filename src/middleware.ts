@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 // See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your middleware
 export default clerkMiddleware((auth, req) => {
   // Check if the route is public
-  const publicRoutes = ["/", "/api/webhook", "/sign-in", "/sign-up"];
+  const publicRoutes = ["/", "/api/webhook", "/login", "/signup", "/sso-callback", "/verify-email"];
   const isPublic = publicRoutes.some(route => req.nextUrl.pathname.startsWith(route));
   
   // If the route is public or the user is authenticated, allow access
@@ -20,8 +20,8 @@ export default clerkMiddleware((auth, req) => {
       return NextResponse.next();
     }
     
-    // Redirect to sign-in if not authenticated
-    const signInUrl = new URL('/sign-in', req.url);
+    // Redirect to login if not authenticated
+    const signInUrl = new URL('/login', req.url);
     signInUrl.searchParams.set('redirect_url', req.url);
     return NextResponse.redirect(signInUrl);
   });
