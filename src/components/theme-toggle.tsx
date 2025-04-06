@@ -8,6 +8,12 @@ import { Button } from "@/components/ui/button"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+  
+  // Only show theme UI after mounting to avoid hydration mismatch
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
   
   // Function to cycle through themes: light -> dark -> system -> light
   const cycleTheme = () => {
@@ -18,6 +24,20 @@ export function ThemeToggle() {
     } else {
       setTheme('light')
     }
+  }
+
+  // Use a placeholder icon during SSR to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="h-8 w-8 px-0"
+      >
+        <Monitor className="h-[1.2rem] w-[1.2rem]" />
+        <span className="sr-only">Theme</span>
+      </Button>
+    )
   }
 
   return (
