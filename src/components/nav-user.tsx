@@ -9,6 +9,7 @@ import {
   IconUserPlus,
   IconLogout,
 } from "@tabler/icons-react"
+import Link from "next/link"
 import { UserButton, SignInButton, SignUpButton, useAuth, useClerk, useUser } from "@clerk/nextjs"
 
 import {
@@ -159,9 +160,11 @@ export function NavUser({
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <IconUserCircle className="mr-2 size-4" />
-                  Account
+                <DropdownMenuItem asChild>
+                  <Link href="/account" className="flex items-center">
+                    <IconUserCircle className="mr-2 size-4" />
+                    Account
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <IconCreditCard className="mr-2 size-4" />
