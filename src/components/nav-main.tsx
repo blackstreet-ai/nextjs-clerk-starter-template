@@ -1,7 +1,8 @@
 "use client"
 
-import { IconHome, type Icon } from "@tabler/icons-react"
+import { type Icon } from "@tabler/icons-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 import {
   SidebarGroup,
@@ -18,29 +19,23 @@ export function NavMain({
     title: string
     url: string
     icon?: Icon
+    isExactPath?: boolean
   }[]
 }) {
+  const pathname = usePathname()
+  
+  // This variable is used elsewhere in the component for conditional rendering
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
-          <SidebarMenuItem>
-            <Link href="/dashboard" className="w-full">
-              <SidebarMenuButton
-                tooltip="Home"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
-              >
-                <IconHome />
-                <span>Home</span>
-              </SidebarMenuButton>
-            </Link>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <Link href={item.url} className="w-full">
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton 
+                  tooltip={item.title}
+                  className={`${item.isExactPath ? (pathname === item.url ? "bg-primary text-primary-foreground" : "") : (pathname.startsWith(item.url) && item.url !== '#' ? "bg-primary text-primary-foreground" : "")}`}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </SidebarMenuButton>
