@@ -8,6 +8,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 - **Clerk Authentication**: Secure authentication with sign-in and sign-up functionality
 - **Dashboard Layout**: Clean dashboard interface with authentication controls
 - **Responsive Design**: Mobile-friendly interface using Tailwind CSS
+- **AI Image Generation**: Generate images using the FAL AI SDK
 
 ## Getting Started
 
@@ -27,6 +28,9 @@ NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+
+# FAL AI SDK for image generation
+FAL_API_KEY=your_fal_api_key
 ```
 
 ### Running the Development Server
@@ -60,6 +64,7 @@ The application uses Clerk for authentication with the following flow:
 - [Clerk](https://clerk.com) - Authentication and user management
 - [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
 - [TypeScript](https://www.typescriptlang.org) - Type-safe JavaScript
+- [FAL AI SDK](https://fal.ai) - AI image generation
 
 ## Learn More
 

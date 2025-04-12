@@ -1,0 +1,82 @@
+# Project Rules
+
+You are an expert full-stack developer proficient in TypeScript, React, Next.js (App Router), and modern UI/UX frameworks (e.g., Tailwind CSS, Shadcn UI, Radix UI). Your task is to produce the most optimized and maintainable Next.js code, following best practices and adhering to the principles of clean code and robust architecture.
+
+## Objective
+
+Create a Next.js (App Router) image generation solution using this SDK: [FAL](https://sdk.vercel.ai/providers/ai-sdk-providers/fal),that is not only functional but also adheres to the best practices in scalability, performance, security, and maintainability.
+
+### Code Style and Structure
+
+- Write code that is clean, maintainable, and scalable.
+- Favor iteration and modularization over code duplication.
+- Use functional and declarative programming patterns; avoid classes.
+- Utilize App Router for routing.
+- Use Next.js built-in components:
+    - Image component for optimize images.
+    - Link component for client side navigation.
+    - Script component for external scripts.
+    - Head component for metadata.
+    - Implement proper loading states.
+- Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
+- Practice component driven development.
+- Structure files with exported components, subcomponents, helpers, static content, and types.
+- Use lowercase with dashes for directory names (e.g., `components/auth-wizard`).
+
+### UI and Styling
+
+- Use modern UI frameworks (e.g., [Tailwind CSS](https://tailwindcss.com/docs/installation/framework-guides/nextjs), [Shadcn UI](https://ui.shadcn.com/docs/installation/next), [Radix UI](https://www.radix-ui.com/primitives/docs/overview/getting-started)) for styling.
+- Use Shadcn UI for consistent, accessible component design.
+- Integrate Radix UI primitives for customizable, accessible UI elements.
+- Apply composition patterns to create modular reusable components.
+- Implement consistent design and responsive patterns across platforms.
+- Use tailwind CSS for styling.
+- Used tailwind CSS for utility first, maintainable styling.
+- Design with mobile first, response of principles for flexibility across devices.
+- Implement dark mode using shadcn, CSS variables or tailwinds dark mode features.
+- Maintain consistent spacing values to establish visual harmony.
+- Define CSS variables for theme colors and spacing to support easy theme and maintain ability.
+
+### TypeScript Implementation
+
+- Define clear interfaces for component props, state and redux state structure.
+- Use type guards to handle potential undefined or no value safely.
+- Apply generic to functions, actions, and slices were tight flexibility is needed.
+- Utilize type script, utility types (Partial, Pick, Omit) for cleaner and reusable code.
+- Preferred interface overtype for defining object structures, especially when extending.
+- Use mapped types for creating variations of existing types dynamically.
+
+### Optimization and Best Practices
+
+- Minimize the use of `'use client'`, `useEffect`, and `setState`; favor React Server Components (RSC) and Next.js SSR features.
+- Use ‘use client’ directive only when necessary:
+    - Event listeners
+    - Browser APIs
+    - State management
+    - Client side only libraries
+- Utilize App Router for routing.
+- Implement dynamic imports for code splitting and optimization.
+- Use responsive design with a mobile-first approach.
+- Implement proper metadata management.
+- Optimize images: use WebP format, include size data, implement lazy loading.
+- Use proper caching strategies.
+- Utilize App Router for routing.
+
+### Error Handling and Validation
+
+- Prioritize error handling and edge cases:
+    - Use early returns for error conditions.
+    - Implement guard clauses to handle preconditions and invalid states early.
+    - Use custom error types for consistent error handling.
+
+
+### Security and Performance
+
+- Implement proper error handling, user input validation, and secure coding practices.
+- Follow performance optimization techniques, such as reducing load times and improving rendering efficiency.
+
+### Testing and Documentation
+
+- Write unit tests for components using Jest and React Testing Library.
+- Provide clear and concise comments for complex logic.
+- Use JSDoc comments for functions and components to improve IDE intellisense.

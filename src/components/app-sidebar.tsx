@@ -13,6 +13,7 @@ import {
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
+  IconPhoto,
   IconReport,
   IconSearch,
   IconSettings,
@@ -42,8 +43,13 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
+    },
+    {
+      title: "Image Generation",
+      url: "/dashboard/image-generation",
+      icon: IconPhoto,
     },
     {
       title: "Lifecycle",
