@@ -39,6 +39,7 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
+  preventAutoExpand: boolean
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -53,7 +54,7 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-  defaultOpen = true,
+  defaultOpen = false, // Changed default to false (collapsed)
   open: openProp,
   onOpenChange: setOpenProp,
   className,
@@ -70,15 +71,19 @@ function SidebarProvider({
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
-  const [_open, _setOpen] = React.useState(() => {
+  const [_open, _setOpen] = React.useState(defaultOpen)
+  const open = openProp ?? _open
+  
+  // Use useEffect to handle localStorage to avoid hydration mismatch
+  React.useEffect(() => {
     // Initialize from localStorage if available
     if (typeof window !== 'undefined') {
       const savedState = localStorage.getItem(SIDEBAR_STORAGE_KEY)
-      return savedState !== null ? savedState === 'true' : defaultOpen
+      if (savedState !== null) {
+        _setOpen(savedState === 'true')
+      }
     }
-    return defaultOpen
-  })
-  const open = openProp ?? _open
+  }, [])
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value
@@ -89,8 +94,12 @@ function SidebarProvider({
       }
 
       // Store sidebar state in localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(SIDEBAR_STORAGE_KEY, String(openState))
+      try {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(SIDEBAR_STORAGE_KEY, String(openState))
+        }
+      } catch (error) {
+        console.error('Failed to save sidebar state to localStorage:', error)
       }
     },
     [setOpenProp, open]
@@ -130,6 +139,7 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
+      preventAutoExpand: true, // Add this flag to prevent auto-expansion
     }),
     [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
   )
@@ -171,7 +181,19 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile, preventAutoExpand } = useSidebar()
+
+  // Create a click handler for the entire sidebar when in collapsed mode
+  const handleSidebarClick = React.useCallback(
+    (event: React.MouseEvent) => {
+      // If in collapsed mode and preventAutoExpand is true, stop all click events
+      if (state === "collapsed" && preventAutoExpand) {
+        // Stop event propagation to prevent sidebar expansion
+        event.stopPropagation();
+      }
+    },
+    [state, preventAutoExpand]
+  );
 
   if (collapsible === "none") {
     return (
@@ -187,6 +209,7 @@ function Sidebar({
       </div>
     )
   }
+
 
   if (isMobile) {
     return (
@@ -221,6 +244,8 @@ function Sidebar({
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
+      data-prevent-auto-expand={preventAutoExpand}
+      onClick={handleSidebarClick}
     >
       {/* This is what handles the sidebar gap on desktop */}
       <div
@@ -276,6 +301,8 @@ function SidebarTrigger({
       size="icon"
       className={cn("size-7", className)}
       onClick={(event) => {
+        // Stop propagation to prevent any parent handlers from triggering
+        event.stopPropagation()
         onClick?.(event)
         toggleSidebar()
       }}
@@ -296,7 +323,11 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       data-slot="sidebar-rail"
       aria-label="Toggle Sidebar"
       tabIndex={-1}
-      onClick={toggleSidebar}
+      onClick={(event) => {
+        // Stop propagation to prevent any parent handlers from triggering
+        event.stopPropagation()
+        toggleSidebar()
+      }}
       title="Toggle Sidebar"
       className={cn(
         "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex",
@@ -510,6 +541,7 @@ function SidebarMenuButton({
   size = "default",
   tooltip,
   className,
+  onClick,
   ...props
 }: React.ComponentProps<"button"> & {
   asChild?: boolean
@@ -518,6 +550,17 @@ function SidebarMenuButton({
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button"
   const { isMobile, state } = useSidebar()
+  
+  // Create a custom onClick handler that prevents sidebar expansion
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      // Always stop propagation to prevent sidebar expansion
+      event.stopPropagation()
+      // Call the original onClick handler if provided
+      onClick?.(event)
+    },
+    [onClick]
+  )
 
   const button = (
     <Comp
@@ -526,6 +569,7 @@ function SidebarMenuButton({
       data-size={size}
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      onClick={handleClick}
       {...props}
     />
   )

@@ -40,7 +40,7 @@ const data = {
   navMain: [
     {
       title: "Home",
-      url: "/dashboard/home",
+      url: "/dashboard",
       icon: IconHome,
       isExactPath: true, // Only match exact path
     },

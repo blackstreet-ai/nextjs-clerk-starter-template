@@ -29,9 +29,18 @@ export function NavGenerate() {
       <SidebarMenu>
         {generateItems.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <Link href={item.url} className="w-full">
+            <Link href={item.url} className="w-full" onClick={(e) => {
+              // Always stop propagation to prevent sidebar expansion
+              e.stopPropagation();
+              // Prevent default behavior to avoid any browser-specific issues
+              if (item.url === '#') {
+                e.preventDefault();
+              }
+            }}>
               <SidebarMenuButton
-                className={`${item.isExactPath ? (pathname === item.url ? "bg-primary text-primary-foreground" : "") : (pathname.startsWith(item.url) && item.url !== '#' ? "bg-primary text-primary-foreground" : "")}`}
+                className={`${item.isExactPath ? 
+                  (pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "") : 
+                  (pathname.startsWith(item.url) && item.url !== '#' ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : "")}`}
               >
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>

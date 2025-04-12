@@ -30,9 +30,16 @@ export function NavSecondary({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <Link href={item.url} className="w-full">
+              <Link href={item.url} className="w-full" onClick={(e) => {
+                // Always stop propagation to prevent sidebar expansion
+                e.stopPropagation();
+                // Prevent default behavior to avoid any browser-specific issues
+                if (item.url === '#') {
+                  e.preventDefault();
+                }
+              }}>
                 <SidebarMenuButton 
-                  className={`${pathname === item.url ? "bg-primary text-primary-foreground" : ""}`}
+                  className={`${pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : ""}`}
                 >
                   <item.icon />
                   <span>{item.title}</span>
