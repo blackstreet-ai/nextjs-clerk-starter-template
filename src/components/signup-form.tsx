@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useSignUp } from "@clerk/nextjs"
+import { useSignUp, useAuth } from "@clerk/nextjs"
 import { useState } from "react"
 
 import { cn } from "@/lib/utils"
@@ -21,6 +21,7 @@ export function SignUpForm({
   ...props
 }: React.ComponentProps<"div">) {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const { signOut } = useAuth();
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -77,7 +78,24 @@ export function SignUpForm({
                         redirectUrlComplete: "/dashboard"
                       });
                     } catch (err) {
-                      console.error(err);
+                      // Check if this is a single session mode error
+                      const errorMessage = err instanceof Error ? err.message : String(err);
+                      if (errorMessage.includes("single session mode")) {
+                        // Sign out the current user and try again
+                        try {
+                          await signOut();
+                          // After signing out, try to authenticate again
+                          await signUp.authenticateWithRedirect({
+                            strategy: "oauth_github",
+                            redirectUrl: "/sso-callback",
+                            redirectUrlComplete: "/dashboard"
+                          });
+                        } catch (signOutErr) {
+                          console.error("Error during sign out:", signOutErr);
+                        }
+                      } else {
+                        console.error(err);
+                      }
                     }
                   }}
                 >
@@ -101,7 +119,24 @@ export function SignUpForm({
                         redirectUrlComplete: "/dashboard"
                       });
                     } catch (err) {
-                      console.error(err);
+                      // Check if this is a single session mode error
+                      const errorMessage = err instanceof Error ? err.message : String(err);
+                      if (errorMessage.includes("single session mode")) {
+                        // Sign out the current user and try again
+                        try {
+                          await signOut();
+                          // After signing out, try to authenticate again
+                          await signUp.authenticateWithRedirect({
+                            strategy: "oauth_google",
+                            redirectUrl: "/sso-callback",
+                            redirectUrlComplete: "/dashboard"
+                          });
+                        } catch (signOutErr) {
+                          console.error("Error during sign out:", signOutErr);
+                        }
+                      } else {
+                        console.error(err);
+                      }
                     }
                   }}
                 >

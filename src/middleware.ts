@@ -17,6 +17,7 @@ export default clerkMiddleware((auth, req) => {
   // For protected routes, check authentication
   return auth().then(({ userId }) => {
     if (userId) {
+      // No longer redirecting from /dashboard to /dashboard/home
       return NextResponse.next();
     }
     

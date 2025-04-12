@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Welcome to your dashboard home",
 };
 
-export default function DashboardHomePage() {
+export default function HomePage() {
   return (
     <SidebarProvider
       style={{
@@ -49,9 +49,14 @@ export default function DashboardHomePage() {
                   {/* Quick actions card */}
                   <div className="rounded-lg border bg-card p-6 shadow-sm">
                     <h3 className="text-lg font-semibold">Quick Actions</h3>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Access frequently used tools and features.
-                    </p>
+                    <div className="mt-4 space-y-2">
+                      <a href="/dashboard/image-generation" className="text-sm text-primary hover:underline block">
+                        Generate Images
+                      </a>
+                      <a href="/dashboard/explore" className="text-sm text-primary hover:underline block">
+                        Explore Content
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

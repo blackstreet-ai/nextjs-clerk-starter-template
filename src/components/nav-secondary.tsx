@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { type Icon } from "@tabler/icons-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 import {
   SidebarGroup,
@@ -21,18 +23,28 @@ export function NavSecondary({
     icon: Icon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  const pathname = usePathname()
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <a href={item.url}>
+              <Link href={item.url} className="w-full" onClick={(e) => {
+                // Always stop propagation to prevent sidebar expansion
+                e.stopPropagation();
+                // Prevent default behavior to avoid any browser-specific issues
+                if (item.url === '#') {
+                  e.preventDefault();
+                }
+              }}>
+                <SidebarMenuButton 
+                  className={`${pathname === item.url ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" : ""}`}
+                >
                   <item.icon />
                   <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
+                </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

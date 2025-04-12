@@ -3,7 +3,6 @@
 import * as React from "react"
 import {
   IconCamera,
-  IconChartBar,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -11,12 +10,11 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
+  IconHome,
   IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
 } from "@tabler/icons-react"
 
 import { NavGenerate } from "@/components/nav-generate"
@@ -41,29 +39,21 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Home",
       url: "/dashboard",
+      icon: IconHome,
+      isExactPath: true, // Only match exact path
+    },
+    {
+      title: "Explore",
+      url: "/dashboard/explore",
       icon: IconDashboard,
-    },
-    {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
+      isExactPath: true, // Only match exact path
     },
     {
       title: "Projects",
       url: "#",
       icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
     },
   ],
   navClouds: [
